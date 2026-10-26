@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071b33" />
+  <meta name="description" content="Су сақшысы — күнделікті су ішу әдетін бақылауға арналған веб-қосымша." />
+  <title>Су сақшысы | Water Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: #071b33;
+      color: #f0f8ff;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 7%;
+      border-bottom: 1px solid #23415e;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #13b8c8;
+      color: #071b33;
+      font-size: 24px;
+    }
+
+    .status {
+      color: #8de9d5;
+      font-size: 13px;
+    }
+
+    main {
+      width: min(1100px, 90%);
+      margin: 42px auto;
+    }
+
+    .hero {
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: #49d9dc;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .description {
+      color: #a8c0d8;
+      line-height: 1.8;
+      max-width: 620px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #102b47;
+      border: 1px solid #244662;
+      border-radius: 22px;
+      padding: 26px;
+    }
+
+    .card h2 {
+      font-size: 19px;
+      margin-bottom: 10px;
+    }
+
+    .muted {
+      color: #a8c0d8;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .amount {
+      font-size: 38px;
+      font-weight: 800;
+      margin: 22px 0 8px;
+    }
+
+    .amount span {
+      font-size: 17px;
+      color: #a8c0d8;
+      font-weight: 500;
+    }
+
+    .progress-track {
+      height: 10px;
+      background: #294762;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 18px 0 12px;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #13b8c8, #6ce6d0);
+      border-radius: inherit;
+      transition: width 0.3s ease;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      padding: 13px 18px;
+      border-radius: 12px;
+      background: #13b8c8;
+      color: #071b33;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    button.secondary {
+      background: #203e5a;
+      color: #f0f8ff;
+      border: 1px solid #42617a;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #8de9d5;
+      outline-offset: 3px;
+    }
+
+    .stat {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 20px 0 8px;
+      color: #6ce6d0;
+    }
+
+    .history {
+      list-style: none;
+      margin-top: 16px;
+    }
+
+    .history li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid #294762;
+      color: #c9dcec;
+      font-size: 14px;
+    }
+
+    .history li:last-child {
+      border-bottom: 0;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .tip {
+      border-left: 4px solid #13b8c8;
+      padding-left: 16px;
+      margin-top: 14px;
+      color: #c9dcec;
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #819bb5;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 18px 5%;
+      }
+
+      main {
+        width: 90%;
+        margin: 30px auto;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .wide {
+        grid-column: auto;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .amount {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">💧</div>
+      <span>Су сақшысы</span>
+    </div>
+    <div class="status">● Жеке су бақылаушысы</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Салауатты өмір салты</p>
+      <h1>Бүгінгі су мөлшеріңді<br />бақыла!</h1>
+      <p class="description">
+        Әрбір стақан — өзіңе жасаған қамқорлық.
+        Күнделікті су ішуді бақылап, пайдалы әдет қалыптастыр.
+      </p>
+    </section>
+
+    <section class="dashboard">
+      <article class="card">
+        <h2>💧 Бүгін ішкен суың</h2>
+        <p class="muted">Күндік мақсатыңды бақыла</p>
+
+        <div class="amount">
+          <span id="consumed">0</span>
+          <span>мл / </span>
+          <span id="goalLabel">2000</span>
+          <span>мл</span>
+        </div>
+
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-label="Күндік су мақсаты"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          id="progressBar"
+        >
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <p class="muted" id="progressText">Мақсаттың 0%-ы орындалды</p>
+
+        <div class="buttons">
+          <button type="button" data-add="250">+250 мл</button>
+          <button type="button" data-add="500">+500 мл</button>
+          <button type="button" data-add="1000">+1000 мл</button>
+          <button type="button" class="secondary" id="resetButton">
+            Қайта бастау
+          </button>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>🎯 Күндік мақсат</h2>
+        <p class="muted">Мақсатты өзіңе ыңғайлап таңда.</p>
+
+        <div class="stat" id="remaining">2000 мл</div>
+        <p class="muted">Мақсатқа жету үшін қалған су мөлшері</p>
+
+        <div class="buttons">
+          <button type="button" class="secondary" data-goal="1500">1500 мл</button>
+          <button type="button" class="secondary" data-goal="2000">2000 мл</button>
+          <button type="button" class="secondary" data-goal="2500">2500 мл</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>📊 Бүгінгі статистика</h2>
+        <p class="muted">Су ішу көрсеткіштерің</p>
+        <div class="stat" id="percent">0%</div>
+        <p class="muted">Күндік мақсаттың орындалуы</p>
+        <div class="stat" id="glasses">0</div>
+        <p class="muted">250 мл стақан есебімен</p>
+      </article>
+
+      <article class="card">
+        <h2>🕘 Су ішу тарихы</h2>
+        <p class="muted">Соңғы қосылған мөлшерлер</p>
+        <ul class="history" id="history">
+          <li><span>Әзірге жазба жоқ</span><span>—</span></li>
+        </ul>
+      </article>
+
+      <article class="card wide">
+        <h2>🌿 Су және экология</h2>
+        <p class="tip">
+          Суды босқа ағызба. Тіс тазалағанда кранды жауып,
+          су құтысын қайта пайдалан. Табиғи ресурстарды сақтау
+          күнделікті шағын әдеттерден басталады.
+        </p>
+      </article>
+
+      <article class="card wide">
+        <h2>💡 Күннің кеңесі</h2>
+        <p class="description" id="tipText">
+          Күніңді өзіңе ыңғайлы су ішу әдетінен баста.
+          Шөлдеу сезіміне және денсаулық жағдайыңа назар аудар.
+        </p>
+        <div class="buttons">
+          <button type="button" id="tipButton">Жаңа кеңес</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Су сақшысы · Су ресурстарын бағалайық 💙
+  </footer>
+
+  <script>
+    const today = new Date().toLocaleDateString("en-CA");
+    const storageKey = "suSaqshysyData";
+
+    const tips = [
+      "Су ішуді күн бойына бөліп әдеттен.",
+      "Жұмыс үстеліңе су құтысын қойып қой.",
+      "Дене белсенділігі кезінде су қажеттілігі артуы мүмкін.",
+      "Суды өз қажеттілігіңе және денсаулық жағдайыңа сай іш.",
+      "Суды үнемдеу — табиғатты қорғаудың қарапайым жолы."
+    ];
+
+    let data = {
+      date: today,
+      consumed: 0,
+      goal: 2000,
+      history: []
+    };
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey));
+
+      if (saved && saved.date === today) {
+        data = {
+          ...data,
+          ...saved,
+          history: Array.isArray(saved.history) ? saved.history : []
+        };
+      }
+    } catch (error) {
+      console.warn("Сақталған мәліметтер оқылмады.", error);
+    }
+
+    const $ = (id) => document.getElementById(id);
+
+    function save() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (error) {
+        console.warn("Мәліметтерді сақтау мүмкін болмады.", error);
+      }
+    }
+
+    function render() {
+      const percent = data.goal > 0
+        ? Math.round(data.consumed / data.goal * 100)
+        : 0;
+
+      $("consumed").textContent = data.consumed;
+      $("goalLabel").textContent = data.goal;
+      $("remaining").textContent =
+        Math.max(0, data.goal - data.consumed) + " мл";
+      $("percent").textContent = percent + "%";
+      $("glasses").textContent = Math.floor(data.consumed / 250);
+      $("progressText").textContent =
+        `Мақсаттың ${percent}%-ы орындалды`;
+
+      $("progressFill").style.width = Math.min(100, percent) + "%";
+      $("progressBar").setAttribute("aria-valuenow", Math.min(100, percent));
+
+      const history = $("history");
+      history.replaceChildren();
+
+      if (data.history.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Әзірге жазба жоқ";
+        history.appendChild(li);
+      } else {
+        data.history.slice(0, 5).forEach((entry) => {
+          const li = document.createElement("li");
+          const label = document.createElement("span");
+          const amount = document.createElement("span");
+
+          label.textContent = entry.time;
+          amount.textContent = `+${entry.amount} мл`;
+
+          li.append(label, amount);
+          history.appendChild(li);
+        });
+      }
+    }
+
+    document.querySelectorAll("[data-add]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const amount = Number(button.dataset.add);
+
+        if (!Number.isFinite(amount) || amount <= 0) return;
+
+        data.consumed += amount;
+        data.history.unshift({
+          amount,
+          time: new Date().toLocaleTimeString("kk-KZ", {
+            hour: "2-digit",
+            minute: "2-digit"
+          })
+        });
+
+        save();
+        render();
+      });
+    });
+
+    document.querySelectorAll("[data-goal]").forEach((button) => {
+      button.addEventListener("click", () => {
+        data.goal = Number(button.dataset.goal);
+        save();
+        render();
+      });
+    });
+
+    $("resetButton").addEventListener("click", () => {
+      if (!confirm("Бүгінгі су статистикасын тазалаймыз ба?")) return;
+
+      data.consumed = 0;
+      data.history = [];
+      save();
+      render();
+    });
+
+    $("tipButton").addEventListener("click", () => {
+      const current = $("tipText").textContent;
+      const choices = tips.filter((tip) => tip !== current);
+      $("tipText").textContent =
+        choices[Math.floor(Math.random() * choices.length)];
+    });
+
+    render();
+  </script>
+</body>
+</html>
